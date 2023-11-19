@@ -16,6 +16,12 @@ class TodoMenu():
         self.todo_db = TodoDatabase()
         self.start_menu()
 
+    def list_all_todos(self):
+        todo_list = self.todo_db.load_todos()
+
+        for index, todo in enumerate(todo_list):
+            print(index, todo)
+
     def start_menu(self):
         menu_options = [
             "[1] Show all todos",
@@ -34,7 +40,7 @@ class TodoMenu():
             if user_menu_input == "Q" or user_menu_input == "q":
                 pass
             elif user_menu_input == "1":
-                pass
+                self.list_all_todos()
             elif user_menu_input == "2":
                 pass
             elif user_menu_input == "3":
