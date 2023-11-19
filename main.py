@@ -13,7 +13,8 @@ class TodoMenu():
             "[1] Show todos",
             "[2] Add todo",
             "[3] Delete todo / Mark a todo as done",
-            "[4] Edit a todo"
+            "[4] Edit a todo",
+            "[q] End the application"
         ]
 
         while True:
@@ -21,6 +22,17 @@ class TodoMenu():
                 print(menu_option)
             
             user_menu_input = input("\nWhat would you like to do? ")
+
+            if user_menu_input == "Q" or user_menu_input = "q":
+                pass
+            if user_menu_input == 1:
+                pass
+            if user_menu_input == 2:
+                pass
+            if user_menu_input == 3:
+                pass
+            if user_menu_input == 4:
+                pass
 
 
 if __name__ == "__main__":
