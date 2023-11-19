@@ -23,16 +23,19 @@ class TodoMenu():
             
             user_menu_input = input("\nWhat would you like to do? ")
 
-            if user_menu_input == "Q" or user_menu_input = "q":
+            if user_menu_input == "Q" or user_menu_input == "q":
                 pass
-            if user_menu_input == 1:
+            if user_menu_input == "1":
                 pass
-            if user_menu_input == 2:
+            if user_menu_input == "2":
                 pass
-            if user_menu_input == 3:
+            if user_menu_input == "3":
                 pass
-            if user_menu_input == 4:
+            if user_menu_input == "4":
                 pass
+            else:
+                print("No such option available, please try again!\n")
+                input("Press enter to continue")
 
 
 if __name__ == "__main__":
