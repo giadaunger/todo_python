@@ -65,3 +65,13 @@ def populate_tables(con):
         with con.cursor() as cursor:
             cursor.execute(categories_inserts_query)
             cursor.execute(todos_inserts_query)
+
+
+def get_todos(con):
+    list_todos_query = """
+    SELECT * FROM todos
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(list_todos_query)
+            return cursor.fetchall()
