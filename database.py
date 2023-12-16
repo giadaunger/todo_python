@@ -70,6 +70,7 @@ def populate_tables(con):
 def get_todos(con):
     list_todos_query = """
     SELECT * FROM todos
+    JOIN categories ON category_id = category(id) AS categ_id
     """
     with con:
         with con.cursor() as cursor:
@@ -106,6 +107,12 @@ def get_category_id(con, category_name):
     with con:
         with con.cursor() as cursor:
             cursor.execute(get_category_id_query, (category_name,))
+            category_id = cursor.fetchone()  
+            if category_id:
+                return category_id[0]  
+            else:
+                return None
+        
         
 def create_category(con, category_name):
     create_categorie_query = """
