@@ -87,6 +87,17 @@ def create_todo(con, todo_name, category_id):
     with con:
         with con.cursor() as cursor:
             cursor.execute(create_todo_query, (todo_name, category_id))
+
+
+def edit_todo(con, todo_name, category_id):
+    edit_todo_query = """
+    UPDATE todos 
+    SET todo_name = %s
+    WHERE id = %s
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(edit_todo_query, (todo_name, category_id))
         
 
 def get_categories(con):
