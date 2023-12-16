@@ -4,7 +4,7 @@ import psycopg2
 def list_todos(con):
         todos = db.get_todos(con=con)
         for index, todo in enumerate(todos):
-             print(f"[{index}] {todo[1]}")
+             print(f"[{index}] {todo[1]} - {todo[4]}")
         input("\nPress enter to go back")
 
 

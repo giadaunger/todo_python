@@ -70,7 +70,8 @@ def populate_tables(con):
 def get_todos(con):
     list_todos_query = """
     SELECT * FROM todos
-    JOIN categories ON category_id = category(id) AS categ_id
+    INNER JOIN categories 
+    ON todos.category_id = categories.id;
     """
     with con:
         with con.cursor() as cursor:
