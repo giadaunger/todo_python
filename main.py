@@ -9,38 +9,79 @@ def list_todos(con):
 
 
 def add_todo(con):
-    todo_name = input("Enter a new todo: ")
-    categories = db.get_categories(con=con)
-    for index, category in enumerate(categories):
-        print(f"[{index}] {category[1]}")
-    print("[x] Add a new category")
+    while True:
+        todo_name = input("Enter a new todo: ").capitalize()
+        if len(todo_name) < 2:
+            print("Todo name too short, try again! ")
+            continue
+        elif len(todo_name) > 100:
+            print("Todod name too long, try again! ")
+            continue
+        break
 
-    chosen_category = input("Enter a category: ")
+    while True:
+        categories = db.get_categories(con=con)
+        for index, category in enumerate(categories):
+            print(f"[{index}] {category[1]}")
+        print("[x] Add a new category")
 
-    if chosen_category == "X" or chosen_category == "x":
-        pass
-    
-    try:
-        chosen_category = int(chosen_category)
-        print(chosen_category)
-        correct_choice = categories[chosen_category]
-        print(correct_choice[0])
-    except (IndexError, ValueError):
-            print("\nInvalid input, please enter one of the following choices")
+        chosen_category = input("Enter a category: ")
+
+        if chosen_category == "X" or chosen_category == "x":
+            while True:
+                new_category_name = input("Enter a new category: ").capitalize()
+                if len(new_category_name) < 2:
+                    print("Category name too short, try again! ")
+                    continue
+                elif len(new_category_name) > 100:
+                    print("Category name too long, try again! ")
+                    continue
+
+                category_exists = False
+                for category in categories:
+                    if new_category_name == category[1]:
+                        print("\nCategory already exists, try again!")
+                        category_exists = True
+                        break  
+
+                if category_exists:
+                    continue  
+                else:
+                    db.create_category(con=con, category_name=new_category_name)
+                    print(f"{new_category_name} was added to categories!")
+                    input("Press enter to continue \n")
+
+                    new_category_id = db.get_category_id(con=con, category_name=new_category_name)
+                    break
+   
+            try:
+                db.create_todo(con=con, todo_name=todo_name, category_id=new_category_id)
+                print(f"{todo_name} was added with category: {new_category_name}")
+                input("Press enter to continue")
+                break
+            except psycopg2.Error:
+                input("Something went wrong \nPress enter to continue")
+        
+        try:
+            chosen_category = int(chosen_category)
+            correct_choice = categories[chosen_category]
+        except (IndexError, ValueError):
+                print("\nInvalid input, please enter an index of the following categories:")
+                continue
+        break
 
     try:
         db.create_todo(con=con, todo_name=todo_name, category_id=correct_choice[0])
         print(f"{todo_name} was added!")
+        input("Press enter to continue")
     except psycopg2.Error:
         input("Something went wrong \nPress enter to continue")
 
 
-# Main execution logic
 def main(con):
     """
     Main menu
     """
-    
     menu_text = """
     Welcome!
 

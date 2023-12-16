@@ -95,3 +95,23 @@ def get_categories(con):
         with con.cursor() as cursor:
             cursor.execute(list_categories_query)
             return cursor.fetchall()
+        
+
+def get_category_id(con, category_name):
+    get_category_id_query = """
+    SELECT id 
+    FROM categories
+    WHERE category_name = %s
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(get_category_id_query, (category_name,))
+        
+def create_category(con, category_name):
+    create_categorie_query = """
+    INSERT INTO categories(category_name)
+    VALUES(%s) 
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(create_categorie_query, (category_name,))
