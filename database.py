@@ -41,3 +41,27 @@ def create_tables(con):
         with con.cursor() as cursor:
             cursor.execute(create_table_category)
             cursor.execute(create_table_todo)
+
+
+def populate_tables(con):
+    categories_inserts_query = """
+    INSERT INTO categories(category_name)
+    VALUES
+        ('Cleaning'),
+        ('Study'),
+        ('Errands')
+    """
+
+    todos_inserts_query = """
+    INSERT INTO todos(todo_name, category_id)
+    VALUES
+        ('Vacuum', 1),
+        ('Wash clothes', 1),
+        ('Go grocery shopping', 3),
+        ('Do SQL exercises', 2)
+    """
+
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(categories_inserts_query)
+            cursor.execute(todos_inserts_query)
