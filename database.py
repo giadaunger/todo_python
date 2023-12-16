@@ -75,3 +75,13 @@ def get_todos(con):
         with con.cursor() as cursor:
             cursor.execute(list_todos_query)
             return cursor.fetchall()
+        
+
+def get_categories(con):
+    list_categories_query = """
+    SELECT * FROM categories
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(list_categories_query)
+            return cursor.fetchall()
