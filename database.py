@@ -75,6 +75,16 @@ def get_todos(con):
         with con.cursor() as cursor:
             cursor.execute(list_todos_query)
             return cursor.fetchall()
+
+
+def create_todo(con, todo_name, category_id):
+    create_todo_query = """
+    INSERT INTO todos(todo_name, category_id)
+    VALUES (%s, %s)
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(create_todo_query, (todo_name, category_id))
         
 
 def get_categories(con):

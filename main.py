@@ -8,6 +8,33 @@ def list_todos(con):
         input("\nPress enter to go back")
 
 
+def add_todo(con):
+    todo_name = input("Enter a new todo: ")
+    categories = db.get_categories(con=con)
+    for index, category in enumerate(categories):
+        print(f"[{index}] {category[1]}")
+    print("[x] Add a new category")
+
+    chosen_category = input("Enter a category: ")
+
+    if chosen_category == "X" or chosen_category == "x":
+        pass
+    
+    try:
+        chosen_category = int(chosen_category)
+        print(chosen_category)
+        correct_choice = categories[chosen_category]
+        print(correct_choice[0])
+    except (IndexError, ValueError):
+            print("\nInvalid input, please enter one of the following choices")
+
+    try:
+        db.create_todo(con=con, todo_name=todo_name, category_id=correct_choice[0])
+        print(f"{todo_name} was added!")
+    except psycopg2.Error:
+        input("Something went wrong \nPress enter to continue")
+
+
 # Main execution logic
 def main(con):
     """
@@ -25,7 +52,8 @@ def main(con):
     """
 
     menu_choices = {
-        "0": list_todos
+        "0": list_todos,
+        "1": add_todo
     }
 
     while True:
