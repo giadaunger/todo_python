@@ -144,6 +144,28 @@ def update_todo(con):
             continue
 
 
+def remove_todo(con):
+    todos = db.get_todos(con=con)
+    while True:
+        for index, todo in enumerate(todos):
+            print(f"[{index}] {todo[1]}")
+        chosen_todo = input("Which todo do you want to delete? ")
+
+        try:
+            chosen_todo = int(chosen_todo)
+            correct_choice = todos[chosen_todo]
+            break
+        except psycopg2.Error:
+            input("Please eneter one of the following todos, try again! ")
+            continue
+
+    db.delete_todo(con=con, todo_id=correct_choice[0])
+    print(f"{correct_choice[1]} was deleted!")
+    input("Press enter to continue")
+
+    
+
+
 def main(con):
     """
     Main menu
@@ -161,7 +183,8 @@ def main(con):
     menu_choices = {
         "0": list_todos,
         "1": add_todo,
-        "2": update_todo
+        "2": update_todo,
+        "3": remove_todo
     }
 
     while True:
