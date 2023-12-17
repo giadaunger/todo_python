@@ -163,9 +163,27 @@ def remove_todo(con):
     print(f"{correct_choice[1]} was deleted!")
     input("Press enter to continue")
 
+
+def remove_category(con):
+    categories = db.get_categories(con=con)
+    for index, category in enumerate(categories):
+        print(f"[{index}] {category[1]}")
     
+    while True:
+        try:
+            chosen_category = int(input("Which category do you want to delete? "))
+            correct_choice = categories[chosen_category]
+            break
+        except psycopg2.Error:
+            print("Something went wrong try again!")
+            continue
 
+    db.delete_todo(con=con, column_name="category_id", delete_input=chosen_category)
+    db.delete_category(con=con, category_id=chosen_category)
+    print(f"{correct_choice[1]} was deleted!")
+    input("Press enter to continue")
 
+    
 def main(con):
     """
     Main menu
@@ -177,6 +195,7 @@ def main(con):
     [1] Add todo
     [2] Update / Edit todo
     [3] Delete todo
+    [4] Delete category
     [q] End program
     """
 
@@ -184,7 +203,8 @@ def main(con):
         "0": list_todos,
         "1": add_todo,
         "2": update_todo,
-        "3": remove_todo
+        "3": remove_todo,
+        "4": remove_category
     }
 
     while True:
