@@ -98,6 +98,16 @@ def edit_todo(con, todo_name, category_id):
     with con:
         with con.cursor() as cursor:
             cursor.execute(edit_todo_query, (todo_name, category_id))
+
+
+def delete_todo(con, todo_id):
+    delete_todo_query = """
+    DELETE FROM todos
+    WHERE id = %s
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(delete_todo_query, (todo_id,))
         
 
 def get_categories(con):
