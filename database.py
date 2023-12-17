@@ -144,3 +144,13 @@ def create_category(con, category_name):
     with con:
         with con.cursor() as cursor:
             cursor.execute(create_categorie_query, (category_name,))
+
+
+def delete_category(con, category_id):
+    delete_category_query = """
+    DELETE FROM categories
+    WHERE id = %s
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(delete_category_query, (category_id,))
