@@ -88,7 +88,8 @@ def update_todo(con):
 
         try:
             chosen_todo = int(chosen_todo)
-            correct_choice = todos[chosen_todo]
+            correct_choice_todo = todos[chosen_todo]
+            print(correct_choice_todo)
         except (IndexError, ValueError):
                 print("\nInvalid input, please enter an index of the following categories:")
                 continue
@@ -116,25 +117,26 @@ def update_todo(con):
             
             try:
                 chosen_category = int(chosen_category)
-                correct_choice = categories[chosen_category]
+                correct_choice_category = categories[chosen_category]
             except (IndexError, ValueError):
                     print("\nInvalid input, please enter an index of the following categories:")
                     continue
             
-            print(correct_choice)
+            print(correct_choice_category)
             
-            if chosen_category == todo[3]:
+                                    
+            if correct_choice_category[0] == todo[2]:
                 print("Todo already has that category, try again \n")
                 continue
             else:
-                db.edit_todo_and_category(con=con, todo_name=updated_todo, category=correct_choice[1])
-                print(f"{updated_todo} was updated with a new category: {correct_choice[1]} ")
+                db.edit_todo_and_category(con=con, todo_name=updated_todo, category_id=correct_choice_category[0], old_todo_name=correct_choice_todo[1])
+                print(f"{updated_todo} was updated with a new category: {correct_choice_category[1]} ")
                 input("Press enter to continue")
             break
 
         elif change_category == "n" or change_category == "no":
             try:
-                db.edit_todo(con=con, todo_name=updated_todo, category_id=correct_choice[0])
+                db.edit_todo(con=con, todo_name=updated_todo, category_id=correct_choice_todo[0])
                 print(f"{updated_todo} was updated!")
                 input("Press enter to continue")
                 break
@@ -222,7 +224,7 @@ def main(con):
         
         try:
             menu_choices[choice](con=con)
-        except IndexError:
+        except KeyError:
             print("Invalid choice, please enter one of the listed options")
 
 

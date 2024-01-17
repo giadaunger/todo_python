@@ -99,22 +99,19 @@ def edit_todo(con, todo_name, category_id):
         with con.cursor() as cursor:
             cursor.execute(edit_todo_query, (todo_name, category_id))
 
-def edit_todo_and_category(con, todo_name, category_id):
+
+def edit_todo_and_category(con, todo_name, category_id, old_todo_name):
     edit_todo_and_category_query = """
-    UPDATE todos 
-    SET todo_name = %s
-    WHERE category_id IN (
-        SELECT id
-        FROM categories 
-        WHERE category_name = %s
-    )
+    UPDATE todos
+    SET todo_name = %s,
+        category_id = %s
+    WHERE todo_name = %s;
     """
     with con:
         with con.cursor() as cursor:
-            cursor.execute(edit_todo_and_category_query, (todo_name, category_id))
+            cursor.execute(edit_todo_and_category_query, (todo_name, category_id, old_todo_name))
 
 
-# Gör en till delete 
 def delete_todo(con, delete_input):
     delete_todo_query = """
     DELETE FROM todos
