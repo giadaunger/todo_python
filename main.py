@@ -183,13 +183,22 @@ def remove_category(con):
             print("Something went wrong try again!")
             continue
 
-    print(correct_choice)
-    print(correct_choice[0])
+    print(f"\nIf you delete a category that has todos,\nall the todos that has category {correct_choice[1]} will be deleted\n")
+    while True:
+        ready_to_delete = input("Are you shore you want to delete this category? (y/n) ").lower()
 
-    db.delete_todo(con=con, delete_input=correct_choice[0])
-    db.delete_category(con=con, category_id=correct_choice[1])
-    print(f"{correct_choice[1]} was deleted!")
-    input("Press enter to continue")
+        if ready_to_delete == "y" or ready_to_delete == "yes":
+            db.delete_todo(con=con, delete_input=correct_choice[0])
+            db.delete_category(con=con, category_id=correct_choice[1])
+            print(f"{correct_choice[1]} was deleted!")
+            input("Press enter to continue")
+        elif ready_to_delete == "n" or ready_to_delete == "no":
+            break
+        else:
+            print("Pleas answer with yes or no: (y/n)\nTry again! ")
+            input("Press enter to continue!\n")
+            continue
+
 
     
 def main(con):
