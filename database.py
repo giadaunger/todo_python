@@ -99,15 +99,40 @@ def edit_todo(con, todo_name, category_id):
         with con.cursor() as cursor:
             cursor.execute(edit_todo_query, (todo_name, category_id))
 
-
-def delete_todo(con, column_name, delete_input):
-    delete_todo_query = f"""
-    DELETE FROM todos
-    WHERE {column_name} = {delete_input}
+def edit_todo_and_category(con, todo_name, category_id):
+    edit_todo_and_category_query = """
+    UPDATE todos 
+    SET todo_name = %s
+    WHERE category_id IN (
+        SELECT id
+        FROM categories 
+        WHERE category_name = %s
+    )
     """
     with con:
         with con.cursor() as cursor:
-            cursor.execute(delete_todo_query, (column_name, delete_input))
+            cursor.execute(edit_todo_and_category_query, (todo_name, category_id))
+
+
+# Gör en till delete 
+def delete_todo(con, delete_input):
+    delete_todo_query = """
+    DELETE FROM todos
+    WHERE category_id = %s
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(delete_todo_query, (delete_input,))
+
+
+def delete_todo_with_id(con, todo_id):
+    delete_todo_with_id_query = """
+    DELETE FROM todos
+    WHERE id = %s
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(delete_todo_with_id_query, (todo_id, ))
         
 
 def get_categories(con):
@@ -149,7 +174,7 @@ def create_category(con, category_name):
 def delete_category(con, category_id):
     delete_category_query = """
     DELETE FROM categories
-    WHERE id = %s
+    WHERE category_name = %s
     """
     with con:
         with con.cursor() as cursor:

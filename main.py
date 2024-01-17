@@ -68,14 +68,15 @@ def add_todo(con):
         except (IndexError, ValueError):
                 print("\nInvalid input, please enter an index of the following categories:")
                 continue
-        break
 
-    try:
-        db.create_todo(con=con, todo_name=todo_name, category_id=correct_choice[0])
-        print(f"{todo_name} was added!")
-        input("Press enter to continue")
-    except psycopg2.Error:
-        input("Something went wrong \nPress enter to continue")
+        try:
+            db.create_todo(con=con, todo_name=todo_name, category_id=correct_choice[0])
+            print(f"{todo_name} was added!")
+            input("Press enter to continue")
+        except psycopg2.Error:
+            input("Something went wrong \nPress enter to continue")
+            continue
+        break
 
 
 def update_todo(con):
@@ -120,11 +121,13 @@ def update_todo(con):
                     print("\nInvalid input, please enter an index of the following categories:")
                     continue
             
+            print(correct_choice)
+            
             if chosen_category == todo[3]:
                 print("Todo already has that category, try again \n")
                 continue
             else:
-                db.edit_todo(con=con, todo_name=updated_todo, category_id=chosen_category)
+                db.edit_todo_and_category(con=con, todo_name=updated_todo, category=correct_choice[1])
                 print(f"{updated_todo} was updated with a new category: {correct_choice[1]} ")
                 input("Press enter to continue")
             break
@@ -159,7 +162,7 @@ def remove_todo(con):
             input("Please eneter one of the following todos, try again! ")
             continue
 
-    db.delete_todo(con=con, todo_id=correct_choice[0])
+    db.delete_todo_with_id(con=con, todo_id=correct_choice[0])
     print(f"{correct_choice[1]} was deleted!")
     input("Press enter to continue")
 
@@ -178,8 +181,11 @@ def remove_category(con):
             print("Something went wrong try again!")
             continue
 
-    db.delete_todo(con=con, column_name="category_id", delete_input=chosen_category)
-    db.delete_category(con=con, category_id=chosen_category)
+    print(correct_choice)
+    print(correct_choice[0])
+
+    db.delete_todo(con=con, delete_input=correct_choice[0])
+    db.delete_category(con=con, category_id=correct_choice[1])
     print(f"{correct_choice[1]} was deleted!")
     input("Press enter to continue")
 
@@ -223,4 +229,10 @@ def main(con):
 if __name__ == '__main__':
     con = db.connect_db()
     db.create_tables(con=con)
+
+    check_if_empty_1 = db.get_categories(con=con)
+    check_if_empty_2 = db.get_todos(con=con)
+    if not check_if_empty_1 or not check_if_empty_2:
+        db.populate_tables(con=con)
+
     main(con=con)
