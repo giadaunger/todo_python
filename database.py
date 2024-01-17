@@ -176,3 +176,14 @@ def delete_category(con, category_id):
     with con:
         with con.cursor() as cursor:
             cursor.execute(delete_category_query, (category_id,))
+
+
+def edit_category(con, category_id, todo_id):
+    edit_category_query = """
+    UPDATE todos 
+    SET category_id = %s
+    WHERE id = %s
+    """
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(edit_category_query, (category_id, todo_id))

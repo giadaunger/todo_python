@@ -89,64 +89,98 @@ def update_todo(con):
         try:
             chosen_todo = int(chosen_todo)
             correct_choice_todo = todos[chosen_todo]
-            print(correct_choice_todo)
         except (IndexError, ValueError):
                 print("\nInvalid input, please enter an index of the following categories:")
                 continue
         break
 
     while True:
-        updated_todo = input("Enter the updated todo: ").capitalize()
-        if len(updated_todo) < 2:
-            print("Todo name too short, try again! ")
-            continue
-        elif len(updated_todo) > 100:
-            print("Todo name too long, try again! ")
-            continue
-        break
+        what_to_edit_text = """
+[1] Edit todo
+[2] Change category
+[x] Go back
+"""
+        print(what_to_edit_text)
+        what_to_edit = input("What do you want to edit? ")
 
-    change_category = input("\nDo you want to change the category? (y/n) ").lower()
-
-    while True:    
-        if change_category == "y" or change_category == "yes":
-            categories = db.get_categories(con=con)
-
-            for index, category in enumerate(categories):
-                print(f"[{index}] {category[1]}")
-            chosen_category = input("Chose a new category: ")
-            
-            try:
-                chosen_category = int(chosen_category)
-                correct_choice_category = categories[chosen_category]
-            except (IndexError, ValueError):
-                    print("\nInvalid input, please enter an index of the following categories:")
+        if what_to_edit == "1":
+            while True:
+                updated_todo = input("Enter the updated todo: ").capitalize()
+                if len(updated_todo) < 2:
+                    print("Todo name too short, try again! ")
                     continue
-            
-            print(correct_choice_category)
-            
-                                    
-            if correct_choice_category[0] == todo[2]:
-                print("Todo already has that category, try again \n")
-                continue
-            else:
-                db.edit_todo_and_category(con=con, todo_name=updated_todo, category_id=correct_choice_category[0], old_todo_name=correct_choice_todo[1])
-                print(f"{updated_todo} was updated with a new category: {correct_choice_category[1]} ")
-                input("Press enter to continue")
+                elif len(updated_todo) > 100:
+                    print("Todo name too long, try again! ")
+                    continue
+                break
+
+            change_category = input("\nDo you want to change the category? (y/n) ").lower()
+
+            while True:    
+                if change_category == "y" or change_category == "yes":
+                    categories = db.get_categories(con=con)
+
+                    for index, category in enumerate(categories):
+                        print(f"[{index}] {category[1]}")
+                    chosen_category = input("Chose a new category: ")
+                    
+                    try:
+                        chosen_category = int(chosen_category)
+                        correct_choice_category = categories[chosen_category]
+                    except (IndexError, ValueError):
+                            print("\nInvalid input, please enter an index of the following categories:")
+                            continue                    
+                                            
+                    if correct_choice_category[0] == todo[2]:
+                        print("Todo already has that category, try again \n")
+                        continue
+                    else:
+                        db.edit_todo_and_category(con=con, todo_name=updated_todo, category_id=correct_choice_category[0], old_todo_name=correct_choice_todo[1])
+                        print(f"{updated_todo} was updated with a new category: {correct_choice_category[1]} ")
+                        input("Press enter to continue")
+                    break
+
+                elif change_category == "n" or change_category == "no":
+                    try:
+                        db.edit_todo(con=con, todo_name=updated_todo, category_id=correct_choice_todo[0])
+                        print(f"{updated_todo} was updated!")
+                        input("Press enter to continue")
+                        break
+                    except psycopg2.Error:
+                        input("Something went wrong \nPress enter to continue")
+                        continue
+                else:
+                    print("No such option try, again! ")
+                    change_category = input("Enter yes or no: ").lower()
+                    continue
+
+        elif what_to_edit == "2":
+            while True:
+                categories = db.get_categories(con=con)
+
+                for index, category in enumerate(categories):
+                    print(f"[{index}] {category[1]}")
+                chosen_category = input("Chose a new category: ")
+
+                try:
+                    chosen_category = int(chosen_category)
+                    correct_choice_category = categories[chosen_category]
+                except (IndexError, ValueError):
+                        print("\nInvalid input, please enter an index of the following categories:")
+                        continue                    
+                                        
+                if correct_choice_category[0] == todo[2]:
+                    print("Todo already has that category, try again \n")
+                    continue
+                else:
+                    db.edit_category(con=con, category_id=correct_choice_category[0], todo_id=correct_choice_todo[0])
+                    print(f"Updated category: {correct_choice_category[1]} ")
+                    input("Press enter to continue")
+                break
             break
 
-        elif change_category == "n" or change_category == "no":
-            try:
-                db.edit_todo(con=con, todo_name=updated_todo, category_id=correct_choice_todo[0])
-                print(f"{updated_todo} was updated!")
-                input("Press enter to continue")
-                break
-            except psycopg2.Error:
-                input("Something went wrong \nPress enter to continue")
-                continue
-        else:
-            print("No such option try, again! ")
-            change_category = input("Enter yes or no: ").lower()
-            continue
+        elif what_to_edit == "x":
+            break
 
 
 def remove_todo(con):
