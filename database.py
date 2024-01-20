@@ -83,10 +83,12 @@ def create_todo(con, todo_name, category_id):
     create_todo_query = """
     INSERT INTO todos(todo_name, category_id)
     VALUES (%s, %s)
+    RETURNING *
     """
     with con:
         with con.cursor() as cursor:
             cursor.execute(create_todo_query, (todo_name, category_id))
+            return cursor.fetchone()
 
 
 def edit_todo(con, todo_name, category_id):
@@ -94,6 +96,7 @@ def edit_todo(con, todo_name, category_id):
     UPDATE todos 
     SET todo_name = %s
     WHERE id = %s
+    RETURNING *
     """
     with con:
         with con.cursor() as cursor:
@@ -106,6 +109,7 @@ def edit_todo_and_category(con, todo_name, category_id, old_todo_name):
     SET todo_name = %s,
         category_id = %s
     WHERE todo_name = %s;
+    RETURNING *
     """
     with con:
         with con.cursor() as cursor:
@@ -116,6 +120,7 @@ def delete_todo(con, delete_input):
     delete_todo_query = """
     DELETE FROM todos
     WHERE category_id = %s
+    RETURNING *
     """
     with con:
         with con.cursor() as cursor:
@@ -126,6 +131,7 @@ def delete_todo_with_id(con, todo_id):
     delete_todo_with_id_query = """
     DELETE FROM todos
     WHERE id = %s
+    RETURNING *
     """
     with con:
         with con.cursor() as cursor:
@@ -147,6 +153,7 @@ def get_category_id(con, category_name):
     SELECT id 
     FROM categories
     WHERE category_name = %s
+    RETURNING *
     """
     with con:
         with con.cursor() as cursor:
@@ -162,16 +169,19 @@ def create_category(con, category_name):
     create_categorie_query = """
     INSERT INTO categories(category_name)
     VALUES(%s) 
+    RETURNING *
     """
     with con:
         with con.cursor() as cursor:
             cursor.execute(create_categorie_query, (category_name,))
+            return cursor.fetchone()
 
 
 def delete_category(con, category_id):
     delete_category_query = """
     DELETE FROM categories
     WHERE category_name = %s
+    RETURNING *
     """
     with con:
         with con.cursor() as cursor:
@@ -183,6 +193,7 @@ def edit_category(con, category_id, todo_id):
     UPDATE todos 
     SET category_id = %s
     WHERE id = %s
+    RETURNING *
     """
     with con:
         with con.cursor() as cursor:
